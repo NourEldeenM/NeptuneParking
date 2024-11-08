@@ -1,14 +1,13 @@
 import java.util.concurrent.Semaphore;
-import java.util.Scanner;
 
-public class ParkingLot {
+public class parkingLot {
     private static final int TOTAL_SPOTS = 4;
 
     private final Semaphore parkingSpots;
 
     private int occupiedSpots = 0;
 
-    public ParkingLot() {
+    public parkingLot() {
         this.parkingSpots = new Semaphore(TOTAL_SPOTS);
     }
 
@@ -53,7 +52,7 @@ public class ParkingLot {
     }
 
     public static void main(String[] args) {
-        ParkingLot parkingLot = new ParkingLot();
+        parkingLot parkingLot = new parkingLot();
 
         Thread car1 = new Thread(new Runnable() {
             @Override
