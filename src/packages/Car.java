@@ -6,10 +6,7 @@ public class Car {
     private int parkingDuration;
     private int gateNumber;
 
-    public Car(int carID, int arrivalTime, int parkingDuration) {
-    }
-
-    public Car(int carID, int arrivalTime, int parkingTime, int gateNumber) {
+    public Car(int carID, int arrivalTime, int parkingDuration, int gateNumber) {
         this.carID = carID;
         this.arrivalTime = arrivalTime;
         this.parkingDuration = parkingDuration;
@@ -26,5 +23,9 @@ public class Car {
 
     public int getParkingDuration() {
         return parkingDuration;
+    }
+
+    public int getGateNumber() {
+        return gateNumber;
     }
 }
