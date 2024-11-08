@@ -1,6 +1,9 @@
+package src;
+
 import java.io.*;
 import java.util.*;
-import packages.*;
+
+import src.packages.*;
 
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -26,7 +29,7 @@ public class Main {
             e.printStackTrace();
         }
 
-        cars.sort(Comparator.comparingInt(car -> car.getArrivalTime())); // sorting if not sorted
+        cars.sort(Comparator.comparingInt(Car::getArrivalTime)); // sorting if not sorted
 
     }
 }

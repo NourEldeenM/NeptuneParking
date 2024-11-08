@@ -1,6 +1,6 @@
-package packages;
+package src.packages;
 
-class Car {
+public class Car {
     private int carID;
     private int arrivalTime;
     private int parkingDuration;
