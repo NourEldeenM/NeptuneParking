@@ -9,6 +9,9 @@ public class ParkingLot {
 
     private int occupiedSpots = 0;
 
+    /**
+     *
+     */
     public ParkingLot() {
         this.parkingSpots = new Semaphore(TOTAL_SPOTS);
     }
@@ -17,6 +20,11 @@ public class ParkingLot {
 
     //If there is 1+ permit available (semaphore’s count is greater than zero), semaphore-- and allows the thread to proceed.
     //If there are no permits available (the count == zero), the thread blocks and waits until another thread releases a permit (by calling .release())
+
+    /**
+     * @param carName
+     * @throws InterruptedException
+     */
     public void acquireSpot(String carName) throws InterruptedException {
         parkingSpots.acquire();
         /*
@@ -39,6 +47,10 @@ public class ParkingLot {
     }
 
     // Method to release a parking spot
+
+    /**
+     * @param carName
+     */
     public void releaseSpot(String carName) {
         synchronized (this) {
             occupiedSpots--;
@@ -48,10 +60,14 @@ public class ParkingLot {
         parkingSpots.release();
     }
 
+    /**
+     * @return
+     */
     public synchronized String getStatus() {
         int availableSpots = TOTAL_SPOTS - occupiedSpots;
         return "Occupied spots: " + occupiedSpots + ", Available spots: " + availableSpots;
     }
+
 
     public static void main(String[] args) {
         ParkingLot parkingLot = new ParkingLot();
