@@ -1,30 +1,49 @@
 package src.packages;
 
-public class Car {
-    private int carID;
-    private int arrivalTime;
-    private int parkingDuration;
-    private int gateNumber;
+public class Car implements Runnable {
+    public int id;
+    public int arrivalTime;
+    public int parkingDuration;
+    private Gate gate;
+    public int waitingTime;
 
-    public Car(int carID, int arrivalTime, int parkingDuration) {
-    }
-
-    public Car(int carID, int arrivalTime, int parkingTime, int gateNumber) {
-        this.carID = carID;
+    public Car(int carID, int arrivalTime, int parkingDuration, Gate gate) {
+        this.id = carID;
         this.arrivalTime = arrivalTime;
         this.parkingDuration = parkingDuration;
-        this.gateNumber = gateNumber;
+        this.gate = gate;
+        this.waitingTime = 0;
     }
 
-    public int getCarID() {
-        return carID;
+    public void park() {
+        try {
+            Thread.sleep(parkingDuration * src.Main.timeUnit);
+        } catch (InterruptedException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
-    public int getArrivalTime() {
-        return arrivalTime;
+    public void leave() {
+        gate.leave(this);
     }
 
-    public int getParkingDuration() {
-        return parkingDuration;
+    @Override
+    public void run() {
+        try {
+            // Arrival time delay
+            Thread.sleep(arrivalTime * src.Main.timeUnit);
+            // Enter park
+            this.waitingTime = gate.enter(this);
+            // Park the car
+            park();
+            // Leave the parking
+            leave();
+        } catch (InterruptedException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public String toString() {
+        return "Car " + this.id+" from gate "+this.gate.toString() ;
     }
 }
