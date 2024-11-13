@@ -20,12 +20,13 @@ public class Gate {
             if (waitingTime == 0) {
                 System.out.println(c.toString() + " waiting for a spot.");
             }
-            Thread.sleep(src.Main.timeUnit);  // Wait for a spot
+            Thread.sleep(src.Main.TIME_UNIT); // Wait for a spot
             waitingTime++;
         }
 
         // Print parking status when the car parks
-        System.out.println(c.toString() + " parked" + (waitingTime > 0 ? " after waiting for " + waitingTime + " units of time" : ""));
+        System.out.println(c.toString() + " parked"
+                + (waitingTime > 0 ? " after waiting for " + waitingTime + " units of time" : ""));
 
         return waitingTime;
     }
@@ -38,7 +39,7 @@ public class Gate {
     }
 
     private void updateParkingStatus() {
-        int occupiedSpots = src.Main.parkSpotsCount - sem.availablePermits();
+        int occupiedSpots = src.Main.PARK_SPOTS_COUNT - sem.availablePermits();
         System.out.println("(Parking Status: " + occupiedSpots + " spots occupied)");
     }
 
