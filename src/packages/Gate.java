@@ -3,12 +3,12 @@ package src.packages;
 import java.util.concurrent.Semaphore;
 
 public class Gate {
-    private final Semaphore sem;
+    private final Semaphore gateSemaphore;
     private int id;
 
     public Gate(int id, Semaphore sem) {
         this.id = id;
-        this.sem = sem;
+        this.gateSemaphore = sem;
     }
 
     public int enter(Car c) throws InterruptedException {
@@ -16,7 +16,7 @@ public class Gate {
 
         System.out.println(c.toString() + " arrived at time " + c.arrivalTime + ".");
 
-        while (!sem.tryAcquire()) {
+        while (!gateSemaphore.tryAcquire()) {
             if (waitingTime == 0) {
                 System.out.println(c.toString() + " waiting for a spot.");
             }
@@ -32,14 +32,14 @@ public class Gate {
     }
 
     public void leave(Car c) {
-        sem.release();
+        gateSemaphore.release();
 
         System.out.println(c.toString() + " left after " + c.parkingDuration + " units of time.");
         updateParkingStatus();
     }
 
     private void updateParkingStatus() {
-        int occupiedSpots = src.Main.PARK_SPOTS_COUNT - sem.availablePermits();
+        int occupiedSpots = src.Main.PARK_SPOTS_COUNT - gateSemaphore.availablePermits();
         System.out.println("(Parking Status: " + occupiedSpots + " spots occupied)");
     }
 
