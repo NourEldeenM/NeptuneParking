@@ -1,49 +1,38 @@
 package src.packages;
 
-import java.util.concurrent.Semaphore;
-
 public class Gate {
-    private final Semaphore gateSemaphore;
-    private int id;
+    private final int id;
+    private final ParkingManager parkingManager;
 
-    public Gate(int id, Semaphore sem) {
+    public Gate(int id, ParkingManager parkingManager) {
         this.id = id;
-        this.gateSemaphore = sem;
+        this.parkingManager = parkingManager;
     }
 
-    public int enter(Car c) throws InterruptedException {
-        int waitingTime = 0;
+    public void handleCar(Car car) {
+        try {
+            System.out.println(car + " arrived at time " + car.arrivalTime + ".");
 
-        System.out.println(c.toString() + " arrived at time " + c.arrivalTime + ".");
+            // Try parking the car
+            parkingManager.tryPark(car);
 
-        while (!gateSemaphore.tryAcquire()) {
-            if (waitingTime == 0) {
-                System.out.println(c.toString() + " waiting for a spot.");
-            }
-            Thread.sleep(src.Main.TIME_UNIT); // Wait for a spot
-            waitingTime++;
+            // Car is parked
+            System.out.println(car + " parked" +
+                    (car.waitingTime > 0 ? " after waiting for " + car.waitingTime + " units of time." : ""));
+
+            // Simulate parking duration
+            car.park();
+
+            // Leave the parking spot
+            parkingManager.leaveSpot(car);
+            System.out.println(car + " left after " + car.parkingDuration + " units of time.");
+        } catch (InterruptedException e) {
+            System.err.println("Error handling car: " + car + ". " + e.getMessage());
         }
-
-        // Print parking status when the car parks
-        System.out.println(c.toString() + " parked"
-                + (waitingTime > 0 ? " after waiting for " + waitingTime + " units of time" : ""));
-
-        return waitingTime;
     }
 
-    public void leave(Car c) {
-        gateSemaphore.release();
-
-        System.out.println(c.toString() + " left after " + c.parkingDuration + " units of time.");
-        updateParkingStatus();
-    }
-
-    private void updateParkingStatus() {
-        int occupiedSpots = src.Main.PARK_SPOTS_COUNT - gateSemaphore.availablePermits();
-        System.out.println("(Parking Status: " + occupiedSpots + " spots occupied)");
-    }
-
+    @Override
     public String toString() {
-        return "" + this.id;
+        return "Gate " + this.id;
     }
 }

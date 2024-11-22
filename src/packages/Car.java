@@ -1,11 +1,11 @@
 package src.packages;
 
 public class Car implements Runnable {
-    public int id;
-    public int arrivalTime;
-    public int parkingDuration;
-    private Gate gate;
+    public final int id;
+    public final int arrivalTime;
+    public final int parkingDuration;
     public int waitingTime;
+    private final Gate gate;
 
     public Car(int carID, int arrivalTime, int parkingDuration, Gate gate) {
         this.id = carID;
@@ -19,31 +19,29 @@ public class Car implements Runnable {
         try {
             Thread.sleep(parkingDuration * src.Main.TIME_UNIT);
         } catch (InterruptedException e) {
-            System.out.println(e.getMessage());
+            System.err.println("Error during parking: " + e.getMessage());
         }
     }
 
-    public void leave() {
-        gate.leave(this);
+    public void incrementWaitingTime() {
+        waitingTime++;
     }
 
     @Override
     public void run() {
         try {
-            // Arrival time delay
+            // Wait until arrival time
             Thread.sleep(arrivalTime * src.Main.TIME_UNIT);
-            // Enter park
-            this.waitingTime = gate.enter(this);
-            // Park the car
-            park();
-            // Leave the parking
-            leave();
+
+            // Use the gate to handle parking
+            gate.handleCar(this);
         } catch (InterruptedException e) {
-            System.out.println(e.getMessage());
+            System.err.println("Error for car " + id + ": " + e.getMessage());
         }
     }
 
+    @Override
     public String toString() {
-        return "Car " + this.id + " from gate " + this.gate.toString();
+        return "Car " + id + " (Gate " + gate + ")";
     }
 }
