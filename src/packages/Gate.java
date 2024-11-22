@@ -1,12 +1,10 @@
 package src.packages;
 
-import java.util.concurrent.Semaphore;
-
 public class Gate {
-    private final Semaphore gateSemaphore;
+    private final CustomSemaphore gateSemaphore;
     private int id;
 
-    public Gate(int id, Semaphore sem) {
+    public Gate(int id, CustomSemaphore sem) {
         this.id = id;
         this.gateSemaphore = sem;
     }
@@ -27,7 +25,7 @@ public class Gate {
         // Print parking status when the car parks
         System.out.println(c.toString() + " parked"
                 + (waitingTime > 0 ? " after waiting for " + waitingTime + " units of time" : ""));
-
+        updateParkingStatus();
         return waitingTime;
     }
 
@@ -38,7 +36,7 @@ public class Gate {
         updateParkingStatus();
     }
 
-    private void updateParkingStatus() {
+    private synchronized void updateParkingStatus() {
         int occupiedSpots = src.Main.PARK_SPOTS_COUNT - gateSemaphore.availablePermits();
         System.out.println("(Parking Status: " + occupiedSpots + " spots occupied)");
     }
