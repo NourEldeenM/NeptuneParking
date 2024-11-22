@@ -3,6 +3,8 @@ package src.packages;
 public class Gate {
     private final CustomSemaphore gateSemaphore;
     private int id;
+    private int carsServed = 0;
+
 
     public Gate(int id, CustomSemaphore sem) {
         this.id = id;
@@ -22,10 +24,12 @@ public class Gate {
             waitingTime++;
         }
 
+        carsServed++;
         // Print parking status when the car parks
         System.out.println(c.toString() + " parked"
                 + (waitingTime > 0 ? " after waiting for " + waitingTime + " units of time" : ""));
         updateParkingStatus();
+        src.Main.currentCarsInParking++;
         return waitingTime;
     }
 
@@ -38,7 +42,12 @@ public class Gate {
 
     private synchronized void updateParkingStatus() {
         int occupiedSpots = src.Main.PARK_SPOTS_COUNT - gateSemaphore.availablePermits();
+        src.Main.currentCarsInParking = occupiedSpots;
         System.out.println("(Parking Status: " + occupiedSpots + " spots occupied)");
+    }
+
+    public int getCarsServed() {
+        return carsServed;
     }
 
     public String toString() {
