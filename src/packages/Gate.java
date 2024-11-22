@@ -20,27 +20,26 @@ public class Gate {
             if (waitingTime == 0) {
                 System.out.println(c.toString() + " waiting for a spot.");
             }
-            Thread.sleep(src.Main.TIME_UNIT); // Wait for a spot
+            Thread.sleep(src.Main.TIME_UNIT);
             waitingTime++;
         }
 
-        // Print parking status when the car parks
         System.out.println(c.toString() + " parked"
-                + (waitingTime > 0 ? " after waiting for " + waitingTime + " units of time" : ""));
-
+                + (waitingTime > 0
+                        ? " after waiting for " + waitingTime + " units of time (Parking Status: "
+                                + (4 - gateSemaphore.availablePermits())
+                                + " spots occupied)"
+                        : " (Parking Status: " + (src.Main.PARK_SPOTS_COUNT - gateSemaphore.availablePermits())
+                                + " spots occupied)"));
         return waitingTime;
     }
 
     public void leave(Car c) {
         gateSemaphore.release();
-
-        System.out.println(c.toString() + " left after " + c.parkingDuration + " units of time.");
-        updateParkingStatus();
-    }
-
-    private void updateParkingStatus() {
-        int occupiedSpots = src.Main.PARK_SPOTS_COUNT - gateSemaphore.availablePermits();
-        System.out.println("(Parking Status: " + occupiedSpots + " spots occupied)");
+        System.out.println(c.toString() + " left after " + c.parkingDuration + " units of time. (Parking Status: "
+                + (src.Main.PARK_SPOTS_COUNT
+                        - gateSemaphore.availablePermits())
+                + " spots occupied)");
     }
 
     public String toString() {
