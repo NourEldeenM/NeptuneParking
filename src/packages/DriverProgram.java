@@ -3,6 +3,7 @@ package src.packages;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Semaphore;
 
 import src.Main;
 
@@ -19,7 +20,8 @@ public class DriverProgram {
 
     public static void start(String inputFileName) {
 
-        CustomSemaphore parkSpots = new CustomSemaphore(PARK_SPOTS_COUNT);
+        Semaphore parkSpots = new Semaphore(PARK_SPOTS_COUNT);
+        List<Gate> gates = new ArrayList<>();
         for (int i = 0; i < GATES_COUNT; i++) {
             gates.add(new Gate(i + 1, parkSpots));
         }
