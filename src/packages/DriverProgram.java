@@ -13,15 +13,14 @@ public class DriverProgram {
     private static final int PARK_SPOTS_COUNT = Main.PARK_SPOTS_COUNT;
     private static final int TIME_UNIT = Main.TIME_UNIT;
 
-
     private DriverProgram() {
     }
+
     private static List<Gate> gates = new ArrayList<>();
 
     public static void start(String inputFileName) {
 
         Semaphore parkSpots = new Semaphore(PARK_SPOTS_COUNT);
-        List<Gate> gates = new ArrayList<>();
         for (int i = 0; i < GATES_COUNT; i++) {
             gates.add(new Gate(i + 1, parkSpots));
         }
@@ -60,7 +59,7 @@ public class DriverProgram {
         System.out.println("\nDetails:");
         int totalCarsServed = 0;
         for (Gate gate : gates) {
-            totalCarsServed+=gate.getCarsServed();
+            totalCarsServed += gate.getCarsServed();
         }
         System.out.println("Total cars served: " + totalCarsServed);
         System.out.println("Total cars currently in parking: " + Main.currentCarsInParking);
