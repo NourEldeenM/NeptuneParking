@@ -5,6 +5,8 @@ import java.util.concurrent.Semaphore;
 public class Gate {
     private final Semaphore gateSemaphore;
     private int id;
+    private int carsServed = 0;
+
 
     public Gate(int id, Semaphore sem) {
         this.id = id;
@@ -24,6 +26,7 @@ public class Gate {
             waitingTime++;
         }
 
+
         System.out.println(c.toString() + " parked"
                 + (waitingTime > 0
                         ? " after waiting for " + waitingTime + " units of time (Parking Status: "
@@ -40,6 +43,10 @@ public class Gate {
                 + (src.Main.PARK_SPOTS_COUNT
                         - gateSemaphore.availablePermits())
                 + " spots occupied)");
+    }
+
+    public int getCarsServed() {
+        return carsServed;
     }
 
     public String toString() {
