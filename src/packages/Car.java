@@ -15,7 +15,7 @@ public class Car implements Runnable {
         this.waitingTime = 0;
     }
 
-    public void park() {
+    public synchronized void park() {
         try {
             Thread.sleep(parkingDuration * src.Main.TIME_UNIT);
         } catch (InterruptedException e) {
@@ -31,12 +31,11 @@ public class Car implements Runnable {
     public void run() {
         try {
             // Arrival time delay
-            Thread.sleep(arrivalTime * src.Main.TIME_UNIT);
-            // Enter park
+            synchronized (this) {
+                Thread.sleep(arrivalTime * src.Main.TIME_UNIT);
+            }
             this.waitingTime = gate.enter(this);
-            // Park the car
             park();
-            // Leave the parking
             leave();
         } catch (InterruptedException e) {
             System.out.println(e.getMessage());

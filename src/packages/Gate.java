@@ -7,13 +7,12 @@ public class Gate {
     private int id;
     private int carsServed = 0;
 
-
     public Gate(int id, Semaphore sem) {
         this.id = id;
         this.gateSemaphore = sem;
     }
 
-    public int enter(Car c) throws InterruptedException {
+    public synchronized int enter(Car c) throws InterruptedException {
         int waitingTime = 0;
 
         System.out.println(c.toString() + " arrived at time " + c.arrivalTime + ".");
@@ -25,8 +24,7 @@ public class Gate {
             Thread.sleep(src.Main.TIME_UNIT);
             waitingTime++;
         }
-
-
+        carsServed++;
         System.out.println(c.toString() + " parked"
                 + (waitingTime > 0
                         ? " after waiting for " + waitingTime + " units of time (Parking Status: "
@@ -34,15 +32,17 @@ public class Gate {
                                 + " spots occupied)"
                         : " (Parking Status: " + (src.Main.PARK_SPOTS_COUNT - gateSemaphore.availablePermits())
                                 + " spots occupied)"));
+        src.Main.currentCarsInParking = src.Main.PARK_SPOTS_COUNT - gateSemaphore.availablePermits();
         return waitingTime;
     }
 
     public void leave(Car c) {
         gateSemaphore.release();
-        System.out.println(c.toString() + " left after " + c.parkingDuration + " units of time. (Parking Status: "
-                + (src.Main.PARK_SPOTS_COUNT
-                        - gateSemaphore.availablePermits())
-                + " spots occupied)");
+            System.out.println(c.toString() + " left after " + c.parkingDuration + " units of time. (Parking Status: "
+                    + (src.Main.PARK_SPOTS_COUNT
+                            - gateSemaphore.availablePermits())
+                    + " spots occupied)");
+        src.Main.currentCarsInParking = src.Main.PARK_SPOTS_COUNT - gateSemaphore.availablePermits();
     }
 
     public int getCarsServed() {
