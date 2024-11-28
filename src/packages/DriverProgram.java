@@ -19,8 +19,7 @@ public class DriverProgram {
     private static List<Gate> gates = new ArrayList<>();
 
     public static void start(String inputFileName) {
-
-        CustomSemaphore parkSpots = new CustomSemaphore(PARK_SPOTS_COUNT);
+        Semaphore parkSpots = new Semaphore(PARK_SPOTS_COUNT);
         for (int i = 0; i < GATES_COUNT; i++) {
             gates.add(new Gate(i + 1, parkSpots));
         }

@@ -1,20 +1,22 @@
 package src.packages;
 
+import java.util.concurrent.Semaphore;
 
 public class Gate {
-    private final CustomSemaphore gateSemaphore;
+    private final Semaphore gateSemaphore;
     private int id;
     private int carsServed = 0;
+
 
     private synchronized void log(String message) {
         System.out.println(message);
     }
-    public Gate(int id, CustomSemaphore sem) {
+    public Gate(int id, Semaphore sem) {
         this.id = id;
         this.gateSemaphore = sem;
     }
 
-    public int enter(Car c) throws InterruptedException {
+    public synchronized int enter(Car c) throws InterruptedException {
         int waitingTime = 0;
 
        log(c.toString() + " arrived at time " + c.arrivalTime + ".");
@@ -44,7 +46,6 @@ public class Gate {
         int occupiedSpots = src.Main.PARK_SPOTS_COUNT - gateSemaphore.availablePermits();
         log(c.toString() + " left after " + c.parkingDuration + " units of time."+" (Parking Status: " + occupiedSpots + " spots occupied)");
         src.Main.currentCarsInParking = src.Main.PARK_SPOTS_COUNT - gateSemaphore.availablePermits();
-
     }
 
     public int getCarsServed() {
