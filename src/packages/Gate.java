@@ -11,6 +11,7 @@ public class Gate {
     private synchronized void log(String message) {
         System.out.println(message);
     }
+
     public Gate(int id, CustomSemaphore sem) {
         this.id = id;
         this.gateSemaphore = sem;
@@ -19,7 +20,7 @@ public class Gate {
     public void enter(Car c) throws InterruptedException {
         long waitingTime = System.currentTimeMillis();
 
-       log(c.toString() + " arrived at time " + c.arrivalTime + ".");
+        log(c.toString() + " arrived at time " + c.arrivalTime + ".");
 
         gateSemaphore.acquire();
 
@@ -44,7 +45,8 @@ public class Gate {
     public synchronized void leave(Car c) {
         gateSemaphore.release();
         int occupiedSpots = src.Main.PARK_SPOTS_COUNT - gateSemaphore.availablePermits();
-        log(c.toString() + " left after " + c.parkingDuration + " units of time."+" (Parking Status: " + occupiedSpots + " spots occupied)");
+        log(c.toString() + " left after " + c.parkingDuration + " units of time." + " (Parking Status: " + occupiedSpots
+                + " spots occupied)");
         src.Main.currentCarsInParking = src.Main.PARK_SPOTS_COUNT - gateSemaphore.availablePermits();
 
     }
