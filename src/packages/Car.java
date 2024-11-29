@@ -5,14 +5,12 @@ public class Car implements Runnable {
     public int arrivalTime;
     public int parkingDuration;
     private Gate gate;
-    public int waitingTime;
 
     public Car(int carID, int arrivalTime, int parkingDuration, Gate gate) {
         this.id = carID;
         this.arrivalTime = arrivalTime;
         this.parkingDuration = parkingDuration;
         this.gate = gate;
-        this.waitingTime = 0;
     }
 
     public synchronized void park() {
@@ -34,9 +32,9 @@ public class Car implements Runnable {
             synchronized (this) {
                 Thread.sleep(arrivalTime * src.Main.TIME_UNIT);
             }
-            this.waitingTime = gate.enter(this);
+            gate.enter(this);
             park();
-            leave();
+            gate.leave(this);
         } catch (InterruptedException e) {
             System.out.println(e.getMessage());
         }
