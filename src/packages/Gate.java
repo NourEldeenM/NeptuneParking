@@ -1,6 +1,8 @@
 package src.packages;
 
 
+import static src.Main.TIME_UNIT;
+
 public class Gate {
     private final CustomSemaphore gateSemaphore;
     private int id;
@@ -14,20 +16,20 @@ public class Gate {
         this.gateSemaphore = sem;
     }
 
-    public int enter(Car c) throws InterruptedException {
-        int waitingTime = 0;
+    public void enter(Car c) throws InterruptedException {
+        long waitingTime = System.currentTimeMillis();
 
        log(c.toString() + " arrived at time " + c.arrivalTime + ".");
 
-        while (!gateSemaphore.tryAcquire()) {
-            if (waitingTime == 0) {
-                log(c.toString() + " waiting for a spot.");
-            }
-            Thread.sleep(src.Main.TIME_UNIT);
-            waitingTime++;
-        }
+        gateSemaphore.acquire();
+
         // Print parking status when the car parks
         carsServed++;
+
+        long currentTime = System.currentTimeMillis();
+        long elapsedTimeMillis = currentTime - waitingTime;
+        waitingTime = elapsedTimeMillis / TIME_UNIT;
+
         log(c.toString() + " parked"
                 + (waitingTime > 0
                         ? " after waiting for " + waitingTime + " units of time (Parking Status: "
@@ -36,7 +38,7 @@ public class Gate {
                         : " (Parking Status: " + (src.Main.PARK_SPOTS_COUNT - gateSemaphore.availablePermits())
                                 + " spots occupied)"));
         src.Main.currentCarsInParking = src.Main.PARK_SPOTS_COUNT - gateSemaphore.availablePermits();
-        return waitingTime;
+
     }
 
     public synchronized void leave(Car c) {
